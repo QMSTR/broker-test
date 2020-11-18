@@ -12,3 +12,9 @@ This repository contains a MWE of a message broker handling:
 1. Exactly one consumer should wake up and continue its execution
 1. The consumer node produces dummy data to be inserted in a [DGraph instance](https://github.com/QMSTR/qmstr/tree/e2d0401f804ffeed8c7e2aafdd22b7889504cf15/deploy/dgraph)
     - This insertion could be performed by the message broker itself
+
+## Resources
+
+- [minikube](https://github.com/kubernetes/minikube), to run Kubernetes locally
+- [KubeMQ queues API](https://docs.kubemq.io/getting-started/message-patterns/queues)
+- [Golang Docker images based on `scratch`](https://medium.com/@chemidy/create-the-smallest-and-secured-golang-docker-image-based-on-scratch-4752223b7324)
