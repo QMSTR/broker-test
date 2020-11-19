@@ -4,7 +4,6 @@ import (
    "context"
    "github.com/kubemq-io/kubemq-go"
    "log"
-   "time"
 )
 
 func main() {
