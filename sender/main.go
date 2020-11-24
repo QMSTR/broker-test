@@ -11,14 +11,14 @@ func main() {
    ctx, cancel := context.WithCancel(context.Background())
    defer cancel()
    client, err := kubemq.NewClient(ctx,
-      kubemq.WithAddress("localhost", 50000),
+      kubemq.WithAddress("kubemq-cluster-grpc.kubemq", 50000),
       kubemq.WithClientId("test-command-client-id"),
       kubemq.WithTransportType(kubemq.TransportTypeGRPC))
    if err != nil {
       log.Fatal(err)
    }
    defer client.Close()
-   channel := "hello-world-queue"
+   channel := "hi-world-queue"
 
    sendResult, err := client.NewQueueMessage().
       SetChannel(channel).

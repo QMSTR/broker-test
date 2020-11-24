@@ -7,18 +7,7 @@ This repository contains a MWE of a message broker handling:
 
 ## Prerequisite
 
-1. Provisioning a cluster
-2. deploying KubeMQ package
-3. Port forwarding 
-   - kubemqctl set cluster proxy 
-       (https://docs.kubemq.io/getting-started/message-patterns/queues)
-   or 
-
-   - kubectl -n kubemq port-forward svc/kubemq-cluster-grpc 50000:50000
-
        
-
-
 ## Steps
 
 1. All consumers (e.g., a [ReplicaSet](https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/)) wait for an event to occur

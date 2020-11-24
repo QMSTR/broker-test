@@ -1,4 +1,4 @@
-module github.com/chemidy/smallest-secured-golang-docker-image
+module kubemqreceivemessage
 
 go 1.15
 
