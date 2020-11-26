@@ -19,16 +19,22 @@ func main() {
    defer client.Close()
    channel := "hi-world-queue"
 
-   receiveResult, err := client.NewReceiveQueueMessagesRequest().
-      SetChannel(channel).
-      SetMaxNumberOfMessages(1).
-      SetWaitTimeSeconds(5).
-      Send(ctx)
-   if err != nil {
-      log.Fatal(err)
-   }
-   log.Printf("Received %d Messages:\n", receiveResult.MessagesReceived)
-   for _, msg := range receiveResult.Messages {
-      log.Printf("MessageID: %s, Body: %s", msg.MessageID, string(msg.Body))
+   for {
+	 receiveResult, err := client.NewReceiveQueueMessagesRequest().
+       SetChannel(channel).
+       SetMaxNumberOfMessages(1).
+       SetWaitTimeSeconds(5).
+       Send(ctx)
+      if err != nil {
+         log.Fatal(err)
+      }
+
+      log.Printf("Received %d Messages:\n", receiveResult.MessagesReceived)
+      if receiveResult != nil && receiveResult.MessagesReceived > 0 {
+         for _, msg := range receiveResult.Messages {
+            log.Printf("MessageID: %s, Body: %s", msg.MessageID, string(msg.Body))
+         }
+         break
+      }
    }
 }
