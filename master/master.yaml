@@ -1,0 +1,17 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: master
+  labels:
+    app: broker-test-rabbitmq
+spec:
+  template:
+    metadata:
+      labels:
+        app: broker-test-rabbitmq
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: master
+          image: marcomicera/broker-test-rabbitmq-master:latest
+          imagePullPolicy: Always
