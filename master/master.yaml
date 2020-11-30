@@ -2,13 +2,8 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: master
-  labels:
-    app: broker-test-rabbitmq
 spec:
   template:
-    metadata:
-      labels:
-        app: broker-test-rabbitmq
     spec:
       restartPolicy: Never
       containers:

@@ -18,11 +18,11 @@ this repo contains a MWE of a master that sends commands to various modules.
     ```
 1. Start the module:
     ```bash
-    kubectl apply -f module/module.yaml
+    kubectl apply -k module
     ```
 1. Start the master:
     ```bash
-    kubectl apply -f master/master.yaml
+    kubectl apply -k master
     ```
 
 Exactly one Pod of the [module ReplicaSet](module/module.yaml) will consume the message.

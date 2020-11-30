@@ -2,17 +2,9 @@ apiVersion: apps/v1
 kind: ReplicaSet
 metadata:
   name: module
-  labels:
-    app: broker-test-rabbitmq
 spec:
   replicas: 2
-  selector:
-    matchLabels:
-      app: broker-test-rabbitmq
   template:
-    metadata:
-      labels:
-        app: broker-test-rabbitmq
     spec:
       containers:
         - name: module
