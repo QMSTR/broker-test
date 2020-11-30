@@ -3,10 +3,10 @@ kind: ReplicaSet
 metadata:
   name: module
 spec:
-  replicas: 2
   template:
     spec:
       containers:
         - name: module
-          image: marcomicera/broker-test-rabbitmq-module:latest
-          imagePullPolicy: Always
+          env:
+            - name: QUEUE_NAME
+              value: "builder"

@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"os"
 
 	"github.com/streadway/amqp"
 )
@@ -13,16 +14,20 @@ func failOnError(err error, msg string) {
 }
 
 func main() {
+
+	// Connecting to RabbitMQ
 	conn, err := amqp.Dial("amqp://guest:guest@rabbitmq-service:5672/")
 	failOnError(err, "Failed to connect to RabbitMQ")
 	defer conn.Close()
-
 	ch, err := conn.Channel()
 	failOnError(err, "Failed to open a channel")
 	defer ch.Close()
 
+	// Retrieving the correct queue
+	queue := os.Getenv("QUEUE_NAME")
+	log.Printf("Listening to queue: %s", queue)
 	q, err := ch.QueueDeclare(
-		"hello", // name
+		queue, // name
 		false,   // durable
 		false,   // delete when unused
 		false,   // exclusive
@@ -31,6 +36,7 @@ func main() {
 	)
 	failOnError(err, "Failed to declare a queue")
 
+	// Consuming a message
 	msgs, err := ch.Consume(
 		q.Name, // queue
 		"",     // consumer
@@ -44,6 +50,7 @@ func main() {
 
 	forever := make(chan bool)
 
+	// Printing to screen
 	go func() {
 		for d := range msgs {
 			log.Printf("Received a message: %s", d.Body)
