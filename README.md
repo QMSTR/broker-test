@@ -7,7 +7,7 @@ this repo contains a MWE of a master that sends commands to various modules.
 
 - A [RabbitMQ instance](https://kubernetes.io/docs/tasks/job/coarse-parallel-processing-work-queue/#starting-a-message-queue-service)
 - One [master Job](master/master.yaml) that issues one event in the queue
-- A [dummy builder ReplicaSet](builder/builder.yaml) containing Pods waiting for messages 
+- A [module ReplicaSet](module/module.yaml) containing Pods waiting for messages 
 
 ## Run the demo
 
@@ -16,13 +16,13 @@ this repo contains a MWE of a master that sends commands to various modules.
     kubectl create -f https://raw.githubusercontent.com/kubernetes/kubernetes/release-1.3/examples/celery-rabbitmq/rabbitmq-service.yaml
     kubectl create -f https://raw.githubusercontent.com/kubernetes/kubernetes/release-1.3/examples/celery-rabbitmq/rabbitmq-controller.yaml
     ```
-1. Start the dummy builder module:
+1. Start the module:
     ```bash
-    kubectl apply -f builder/builder.yaml
+    kubectl apply -f module/module.yaml
     ```
 1. Start the master:
     ```bash
     kubectl apply -f master/master.yaml
     ```
 
-Exactly one Pod of the [builder ReplicaSet](builder/builder.yaml) will consume the message.
+Exactly one Pod of the [module ReplicaSet](module/module.yaml) will consume the message.

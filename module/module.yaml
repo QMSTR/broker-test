@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: ReplicaSet
 metadata:
-  name: builder
+  name: module
   labels:
     app: broker-test-rabbitmq
 spec:
@@ -15,6 +15,6 @@ spec:
         app: broker-test-rabbitmq
     spec:
       containers:
-        - name: builder
-          image: marcomicera/broker-test-rabbitmq-builder:latest
+        - name: module
+          image: marcomicera/broker-test-rabbitmq-module:latest
           imagePullPolicy: Always

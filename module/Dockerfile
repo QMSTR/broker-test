@@ -36,7 +36,7 @@ COPY . .
 # Build the binary
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build \
     -ldflags='-w -s -extldflags "-static"' -a \
-    -o /go/bin/builder .
+    -o /go/bin/module .
 
 ############################
 # STEP 2 build a small image
@@ -50,10 +50,10 @@ COPY --from=builder /etc/passwd /etc/passwd
 COPY --from=builder /etc/group /etc/group
 
 # Copy our static executable
-COPY --from=builder /go/bin/builder /go/bin/builder
+COPY --from=builder /go/bin/module /go/bin/module
 
 # Use an unprivileged user.
 USER appuser:appuser
 
-# Run the builder binary.
-ENTRYPOINT ["/go/bin/builder"]
+# Run the module binary.
+ENTRYPOINT ["/go/bin/module"]
