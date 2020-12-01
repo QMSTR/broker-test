@@ -25,6 +25,10 @@ and a [reporter](modules/reporter).
     kubectl apply -k modules/analyzer
     kubectl apply -k modules/reporter
     ```
+   or, to start them all:
+    ```bash
+    kubectl apply -k modules
+    ```
 1. Start the master:
     ```bash
     kubectl apply -k master
