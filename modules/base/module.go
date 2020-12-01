@@ -1,16 +1,35 @@
 package main
 
 import (
+	"fmt"
+	"github.com/streadway/amqp"
 	"log"
 	"os"
-
-	"github.com/streadway/amqp"
+	"time"
 )
 
 func failOnError(err error, msg string) {
 	if err != nil {
 		log.Fatalf("%s: %s", msg, err)
 	}
+}
+
+func declareResponseQueue(ch *amqp.Channel, queue string) amqp.Queue {
+	return declareQueue(ch, fmt.Sprintf("%v-response", queue))
+}
+
+func declareQueue(ch *amqp.Channel, queue string) amqp.Queue {
+	q, err := ch.QueueDeclare(
+		queue, // name
+		false, // durable
+		false, // delete when unused
+		false, // exclusive
+		false, // no-wait
+		nil,   // arguments
+	)
+	failOnError(err, "Failed to declare a queue")
+
+	return q
 }
 
 func main() {
@@ -24,39 +43,52 @@ func main() {
 	defer ch.Close()
 
 	// Retrieving the correct queue
-	queue := os.Getenv("QUEUE_NAME")
-	log.Printf("Listening to queue: %s", queue)
-	q, err := ch.QueueDeclare(
-		queue, // name
-		false,   // durable
-		false,   // delete when unused
-		false,   // exclusive
-		false,   // no-wait
-		nil,     // arguments
-	)
+	queueName := os.Getenv("QUEUE_NAME")
+	log.Printf("Listening to queue: %s", queueName)
+	queue := declareQueue(ch, queueName)
+	responseQueue := declareResponseQueue(ch, queueName)
 	failOnError(err, "Failed to declare a queue")
 
 	// Consuming a message
 	msgs, err := ch.Consume(
-		q.Name, // queue
-		"",     // consumer
-		true,   // auto-ack
-		false,  // exclusive
-		false,  // no-local
-		false,  // no-wait
-		nil,    // args
+		queue.Name, // queue
+		"",         // consumer
+		true,       // auto-ack
+		false,      // exclusive
+		false,      // no-local
+		false,      // no-wait
+		nil,        // args
 	)
 	failOnError(err, "Failed to register a consumer")
 
-	forever := make(chan bool)
-
-	// Printing to screen
+	// Sending back the module result
+	responded := make(chan bool)
 	go func() {
 		for d := range msgs {
 			log.Printf("Received a message: %s", d.Body)
+
+			// Dummy computation
+			dummyComputationTimeInSeconds := 15
+			log.Printf("Performing dummy computation for %d seconds...", dummyComputationTimeInSeconds)
+			time.Sleep(time.Duration(dummyComputationTimeInSeconds) * time.Second)
+
+			// Sending a response
+			log.Printf("...dummy computation completed. Sending a response to the master...")
+			responseBody := fmt.Sprintf("Response from %v", queueName)
+			err = ch.Publish(
+				"",        // exchange
+				responseQueue.Name, // routing key
+				false,     // mandatory
+				false,     // immediate
+				amqp.Publishing{
+					ContentType:   "text/plain",
+					CorrelationId: queueName,
+					Body:          []byte(responseBody),
+				})
+			failOnError(err, "Failed to publish the response")
+			log.Printf("...response sent.")
+			responded <- true
 		}
 	}()
-
-	log.Printf(" [*] Waiting for messages. To exit press CTRL+C")
-	<-forever
+	<-responded
 }

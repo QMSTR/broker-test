@@ -14,6 +14,10 @@ func failOnError(err error, msg string) {
 	}
 }
 
+func declareResponseQueue(ch *amqp.Channel, queue string) amqp.Queue {
+	return declareQueue(ch, fmt.Sprintf("%v-response", queue))
+}
+
 func declareQueue(ch *amqp.Channel, queue string) amqp.Queue {
 	q, err := ch.QueueDeclare(
 		queue, // name
@@ -35,11 +39,38 @@ func publishMessage(ch *amqp.Channel, q *amqp.Queue, body string) {
 		false,  // mandatory
 		false,  // immediate
 		amqp.Publishing{
-			ContentType: "text/plain",
-			Body:        []byte(body),
+			DeliveryMode:  amqp.Persistent,
+			ContentType:   "text/plain",
+			//CorrelationId: q.Name,
+			//ReplyTo:       fmt.Sprintf("%v-response", q.Name),
+			Body:          []byte(body),
 		})
-	log.Printf(" [x] Sent %s", body)
 	failOnError(err, "Failed to publish a message")
+	log.Printf(" [x] Sent %s", body)
+}
+
+func consumeModuleResponse(ch *amqp.Channel, q *amqp.Queue, finalModuleHasResponded chan <- bool, remainingModules *int) {
+	moduleResponse, err := ch.Consume(
+		q.Name,
+		"",    // consumer
+		true,  // auto-ack
+		false, // exclusive
+		false, // no-local
+		false, // no-wait
+		nil,   // args
+	)
+	failOnError(err, fmt.Sprintf("Failed to consume the %v response", q.Name))
+
+	// Printing to screen
+	go func() {
+		for d := range moduleResponse {
+			log.Printf("Received a message from a %v: %s", q.Name, d.Body)
+		}
+		*remainingModules -= 1
+		if *remainingModules == 0 {
+			finalModuleHasResponded <- true
+		}
+	}()
 }
 
 func main() {
@@ -54,8 +85,11 @@ func main() {
 
 	// Declaring queues
 	builderQueue := declareQueue(ch, "builder")
+	builderResponseQueue := declareResponseQueue(ch, "builder")
 	analyzerQueue := declareQueue(ch, "analyzer")
+	analyzerResponseQueue := declareResponseQueue(ch, "analyzer")
 	reporterQueue := declareQueue(ch, "reporter")
+	reporterResponseQueue := declareResponseQueue(ch, "reporter")
 
 	type module struct {
 		name string
@@ -81,12 +115,21 @@ func main() {
 	// Waking up one Pod of each module at the time
 	for _, module := range modulesToWakeUp {
 		sleepTimeInSeconds := 5
+		time.Sleep(time.Duration(sleepTimeInSeconds) * time.Second)
 		log.Printf("Waking up one %s...", module.name)
 		publishMessage(ch, &module.queue, fmt.Sprintf("Go, %s!", module.name))
-		log.Printf("...%s event sent. Sleeping for %d seconds...",
-			module.name, sleepTimeInSeconds)
-		time.Sleep(time.Duration(sleepTimeInSeconds) * time.Second)
 	}
 
-	log.Printf("...done.")
+	// Waiting for modules' responses.
+	// Apparently, we cannot wait for multiple messages belonging to different queues.
+	// However, it makes sense for Quartermaster to wait only for messages belonging
+	// to the current phase (i.e., builder, analysis, report).
+	// The master consumes messages following that order.
+	allModulesHaveResponded := make(chan bool)
+	remainingModules := len(modulesToWakeUp)
+	consumeModuleResponse(ch, &builderResponseQueue, allModulesHaveResponded, &remainingModules)
+	consumeModuleResponse(ch, &analyzerResponseQueue, allModulesHaveResponded, &remainingModules)
+	consumeModuleResponse(ch, &reporterResponseQueue, allModulesHaveResponded, &remainingModules)
+
+	<-allModulesHaveResponded
 }
