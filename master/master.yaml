@@ -8,5 +8,5 @@ spec:
       restartPolicy: Never
       containers:
         - name: master
-          image: marcomicera/broker-test-rabbitmq-master:latest
+          image: marcomicera/broker-test-rabbitmq-master:responses
           imagePullPolicy: Always
