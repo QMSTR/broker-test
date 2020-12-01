@@ -6,6 +6,8 @@ a [builder](modules/builder),
 an [analyzer](modules/analyzer),
 and a [reporter](modules/reporter).
 
+Those modules then send a response back to the master.
+
 ## Demo setup
 
 - A [RabbitMQ instance](https://kubernetes.io/docs/tasks/job/coarse-parallel-processing-work-queue/#starting-a-message-queue-service)
@@ -34,4 +36,5 @@ and a [reporter](modules/reporter).
     kubectl apply -k master
     ```
 
-Exactly one Pod of each [module ReplicaSet](modules) will consume its corresponding message.
+Exactly one Pod of each [module ReplicaSet](modules) will consume its corresponding message.\
+All the modules will then reply after having performed some dummy computation.
