@@ -18,8 +18,7 @@ Those modules then send a response back to the master.
 
 1. Start RabbitMQ:
     ```bash
-    kubectl create -f https://raw.githubusercontent.com/kubernetes/kubernetes/release-1.3/examples/celery-rabbitmq/rabbitmq-service.yaml
-    kubectl create -f https://raw.githubusercontent.com/kubernetes/kubernetes/release-1.3/examples/celery-rabbitmq/rabbitmq-controller.yaml
+    kubectl apply -k rabbitmq
     ```
 1. Start any subset of dummy modules:
     ```bash
@@ -38,3 +37,13 @@ Those modules then send a response back to the master.
 
 Exactly one Pod of each [module ReplicaSet](modules) will consume its corresponding message.\
 All the modules will then reply after having performed some dummy computation.
+
+## RabbitMQ dashboard
+
+1. Port-forward RabbitMQ's management port:
+    ```bash
+    kubectl port-forward svc/rabbitmq-service 15672:15672
+    ```
+1. Visit [localhost:15672](http://localhost:15672) and use the following credentials to log in:
+    - Username: `guest`
+    - Password: `guest`
