@@ -14,6 +14,11 @@ Those modules then send a response back to the master.
 - One [master Job](master/master.yaml) issuing messages in all queues
 - Three dummy [module ReplicaSets](modules) containing Pods waiting for different kind of messages 
 
+## Configuration
+
+Set the RabbitMQ address for the [master](master/rabbitmq_address.env)
+and for [all modules](modules/base/rabbitmq_address.env).
+
 ## Run the demo
 
 1. Start RabbitMQ:

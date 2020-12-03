@@ -4,5 +4,9 @@ kind: Kustomization
 resources:
   - module.yaml
 
+configMapGenerator:
+  - name: rabbitmq-address
+    env: rabbitmq_address.env
+
 commonLabels:
   app: broker-test-rabbitmq
