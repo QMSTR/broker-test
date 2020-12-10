@@ -47,7 +47,6 @@ func main() {
 	log.Printf("Listening to queue: %s", queueName)
 	queue := declareQueue(ch, queueName)
 	responseQueue := declareResponseQueue(ch, queueName)
-	failOnError(err, "Failed to declare a queue")
 
 	// Consuming a message
 	msgs, err := ch.Consume(
