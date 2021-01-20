@@ -8,7 +8,7 @@ spec:
     spec:
       containers:
         - name: module
-          image: marcomicera/broker-test-rabbitmq-module:synclib
+          image: endocode/broker-test-rabbitmq-module:synclib
           imagePullPolicy: Always
           env:
             - name: QUEUE_NAME
