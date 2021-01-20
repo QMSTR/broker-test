@@ -1,0 +1,6 @@
+version: '3.3'
+services:
+  base:
+    image: marcomicera/broker-test-rabbitmq-module:synclib
+    build:
+      context: .

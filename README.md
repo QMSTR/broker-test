@@ -21,6 +21,10 @@ and for [all modules](modules/base/rabbitmq_address.env).
 
 ## Run the demo
 
+1. First, build and push all the images:
+    ```bash
+    make images
+    ```
 1. Start RabbitMQ:
     ```bash
     kubectl create -f https://raw.githubusercontent.com/kubernetes/kubernetes/release-1.3/examples/celery-rabbitmq/rabbitmq-service.yaml

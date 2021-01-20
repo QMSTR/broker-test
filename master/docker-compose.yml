@@ -1,0 +1,6 @@
+version: '3.3'
+services:
+  master:
+    image: marcomicera/broker-test-rabbitmq-master:addr_env
+    build:
+      context: .
