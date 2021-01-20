@@ -12,6 +12,11 @@ Those modules then send a response back to the master.
     <img src="img/logs.png"/>
 </p>
 
+Modules use the
+Quartermaster
+[`synclib`](https://github.com/QMSTR/synclib) library
+to interact with RabbitMQ.
+
 ## Demo setup
 
 - A [RabbitMQ instance](https://kubernetes.io/docs/tasks/job/coarse-parallel-processing-work-queue/#starting-a-message-queue-service)
