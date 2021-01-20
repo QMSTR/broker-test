@@ -8,6 +8,10 @@ and a [reporter](modules/reporter).
 
 Those modules then send a response back to the master.
 
+<p align="center">
+    <img src="img/logs.png"/>
+</p>
+
 ## Demo setup
 
 - A [RabbitMQ instance](https://kubernetes.io/docs/tasks/job/coarse-parallel-processing-work-queue/#starting-a-message-queue-service)
