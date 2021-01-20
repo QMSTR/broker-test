@@ -30,6 +30,10 @@ and for [all modules](modules/base/rabbitmq_address.env).
     kubectl create -f https://raw.githubusercontent.com/kubernetes/kubernetes/release-1.3/examples/celery-rabbitmq/rabbitmq-service.yaml
     kubectl create -f https://raw.githubusercontent.com/kubernetes/kubernetes/release-1.3/examples/celery-rabbitmq/rabbitmq-controller.yaml
     ```
+1. Wait for RabbitMQ to start:
+    ```bash
+    kubectl logs $(kubectl get pod --selector component=rabbitmq -o=name) --follow
+    ```
 1. Start any subset of dummy modules:
     ```bash
     kubectl apply -k modules/builder
