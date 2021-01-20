@@ -1,2 +1,7 @@
+github.com/qmstr/synclib v0.0.0-20210120091600-75cd85032445 h1:gvJ9TRoq1xDPLC8TsXohMuUVGwWyLui+D/vm7DJvNVc=
+github.com/qmstr/synclib/pkg/module/rabbitmq v0.0.0-20210120091600-75cd85032445 h1:ijaAnNuZUBrraTvsA0SdZoCGwyf1EsnT1C9MCpjNdwI=
+github.com/qmstr/synclib/pkg/module/rabbitmq v0.0.0-20210120091600-75cd85032445/go.mod h1:SVjxZjP0dxdtvqH9/8S5RaJ2qo0broide5H+2esZH+8=
+github.com/qmstr/synclib/pkg/module/util v0.0.0-20210120091600-75cd85032445 h1:CHbYlW5puypksN975kBLNciYAo186dGk+z/no2Nw9Ag=
+github.com/qmstr/synclib/pkg/module/util v0.0.0-20210120091600-75cd85032445/go.mod h1:tCkToMYeiAI5bwzvWwlUvjsiPp3822GHXQd7hQnoKhA=
 github.com/streadway/amqp v1.0.0 h1:kuuDrUJFZL1QYL9hUNuCxNObNzB0bV/ZG5jV3RWAQgo=
 github.com/streadway/amqp v1.0.0/go.mod h1:AZpEONHx3DKn8O/DFsRAY58/XVQiIPMTMB1SddzLXVw=
